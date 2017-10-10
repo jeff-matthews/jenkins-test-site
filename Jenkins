@@ -1,0 +1,65 @@
+#!/usr/bin/env groovy
+
+node('master') {
+  try {
+      stage('Commit') {
+        withRvm {
+          // Checkout SCM
+          checkout scm
+
+          // Configure Workspace
+          sh 'which bundle || gem install bundler'
+          sh 'bundle install'
+
+        }
+      }
+  } catch(err) {
+    handleException(err)
+  }
+}
+
+// Configures RVM for the workspace
+def withRvm(Closure stage) {
+  rubyVersion = 'ruby-2.2.5'
+  rvmGemset = 'devsecops'
+  RVM_HOME = '$HOME/.rvm'
+
+  paths = [
+      "$RVM_HOME/gems/$rubyVersion@$rvmGemset/bin",
+      "$RVM_HOME/gems/$rubyVersion@global/bin",
+      "$RVM_HOME/rubies/$rubyVersion/bin",
+      "$RVM_HOME/bin",
+      "${env.PATH}"
+  ]
+
+  env.PATH = paths.join(':')
+  env.GEM_HOME = "$RVM_HOME/gems/$rubyVersion@$rvmGemset"
+  env.GEM_PATH = "$RVM_HOME/gems/$rubyVersion@$rvmGemset:$RVM_HOME/gems/$rubyVersion@global"
+  env.MY_RUBY_HOME = "$RVM_HOME/rubies/$rubyVersion"
+  env.IRBRC = "$RVM_HOME/rubies/$rubyVersion/.irbrc"
+  env.RUBY_VERSION = "$rubyVersion"
+
+  stage()
+}
+
+// Helper function for rake
+def rake(String command) {
+  sh "bundle exec rake $command"
+}
+
+// Exception helper
+def handleException(Exception err) {
+  println(err.toString());
+  println(err.getMessage());
+  println(err.getStackTrace());
+
+  /* Mail currently not configured
+  mail  body: "project build error is here: ${env.BUILD_URL}" ,
+        from: 'aws-devsecops-workshop@stelligent.com',
+        replyTo: 'no-reply@stelligent.com',
+        subject: 'AWS DevSecOps Workshop Pipeline Build Failed',
+        to: 'robert.murphy@stelligent.com'
+  */
+
+  throw err
+}
