@@ -16,7 +16,7 @@ def withRvm(version, cl) {
 }
 
 def withRvm(version, gemset, cl) {
-    RVM_HOME='~/.rvm'
+    RVM_HOME='$HOME/.rvm'
     paths = [
         "$RVM_HOME/gems/$version@$gemset/bin",
         "$RVM_HOME/gems/$version@global/bin",
@@ -25,8 +25,10 @@ def withRvm(version, gemset, cl) {
         "${env.PATH}"
     ]
     def path = paths.join(':')
-    withEnv(["PATH=${env.PATH}:$RVM_HOME", "RVM_HOME=$RVM_HOME"]) {
-        sh "#!/bin/bash\nset +x; source $RVM_HOME/scripts/rvm; rvm use --create --install --binary $version@$gemset"
+    //withEnv(["PATH=${env.PATH}:$RVM_HOME", "RVM_HOME=$RVM_HOME"]) {
+      //  sh "#!/bin/bash\nset +x; source $RVM_HOME/scripts/rvm; rvm use --create //--install --binary $version@$gemset"
+      withEnv(["PATH=$path:$RVM_HOME", "RVM_HOME=$RVM_HOME"]) {
+        sh "set +x; source $RVM_HOME/scripts/rvm; rvm use --create --install --binary $version@$gemset"
     }
     withEnv([
         "PATH=$path",
@@ -36,6 +38,7 @@ def withRvm(version, gemset, cl) {
         "IRBRC=$RVM_HOME/rubies/$version/.irbrc",
         "RUBY_VERSION=$version"
     ]) {
+    'gem install bundler'
         cl()
     }
 }
