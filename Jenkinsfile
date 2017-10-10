@@ -4,7 +4,6 @@ stage('Install dependencies') {
         withRvm('ruby-2.4.1') {
             sh 'gem install bundler'
             sh 'bundle install'
-            stash includes: 'Gemfile.lock, .bundle', name: 'bundle'
         }
     }
 }
@@ -26,7 +25,7 @@ def withRvm(version, gemset, cl) {
     ]
     def path = paths.join(':')
     withEnv(["PATH=${env.PATH}:$RVM_HOME", "RVM_HOME=$RVM_HOME"]) {
-        sh "#!/bin/bash\nset +x; source $RVM_HOME/scripts/rvm; rvm use --create --install --binary $version@$gemset"
+        sh "bash -c " source ~/.rvm/scripts/rvm && rvm use --install --create ruby@2.4.1 && export > rvm.env""
     }
     withEnv([
         "PATH=$path",
