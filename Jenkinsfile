@@ -1,10 +1,10 @@
 stage('Install dependencies') {
     node {
         checkout scm
-        withRvm('ruby-2.3.1') {
-            sh 'bundle -v || gem install bundler'
+        withRvm('ruby-2.4.1') {
+            sh 'gem install bundler'
             sh 'bundle install'
-            stash includes: 'Gemfile.lock, .bundle', name: 'bundle'
+            //stash includes: 'Gemfile.lock, .bundle', name: 'bundle'
         }
     }
 }
