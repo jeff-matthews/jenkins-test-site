@@ -1,4 +1,4 @@
-pstage('Install dependencies') {
+stage('Install dependencies') {
     node {
         checkout scm
         withRvm('ruby-2.3.1') {
