@@ -16,7 +16,7 @@ def withRvm(version, cl) {
 }
 
 def withRvm(version, gemset, cl) {
-    RVM_HOME='$HOME/.rvm'
+    RVM_HOME='~/.rvm'
     paths = [
         "$RVM_HOME/gems/$version@$gemset/bin",
         "$RVM_HOME/gems/$version@global/bin",
