@@ -9,7 +9,7 @@ stage('Install dependencies') {
 }
 
 def withRvm(version, cl) {
-    withRvm(version, "$gemset}") {
+    withRvm(version, "executor-${env.EXECUTOR_NUMBER}") {
         cl()
     }
 }
