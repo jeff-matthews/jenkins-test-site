@@ -1,21 +1,23 @@
-agent {
-    docker { image 'ruby:2.4.1' }
-}
-stages {
-    stage('Cloning the repo') {
-        steps {
-            checkout scm
-        }
+node {
+    agent {
+        docker { image 'ruby:2.4.1' }
     }
-    stage('Installing dependencies') {
-        steps {
-            sh 'gem install bundler'
-            sh 'bundle install'
+    stages {
+        stage('Check ruby') {
+            steps {
+                sh 'ruby --version'
+            }   
         }
-    }
-    stage('Building the devdocs site') {
-        steps {
-            sh 'jekyll build'
+        stage('Clone the repo') {
+            steps {
+                git branch: 'master', url: 'https://github.com/jeff-matthews/jenkins-test-site.git'
+            }
+        }
+        stage('Install dependencies') {
+            steps {
+                sh 'gem install bundler'
+                sh 'bundle install'
+            }
         }
     }
 }
