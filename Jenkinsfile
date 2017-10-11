@@ -38,5 +38,6 @@ node {
 
         withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')]) {
             sh 'git push https://${GH_USER}:${GH_TOKEN}@github.com/magento/devdocs.git gh-pages'v
+        }
     }
 }
