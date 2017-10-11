@@ -1,21 +1,21 @@
 node {
-    stage("Main build") {
+    stage("Preparing the build environment") {
 
-        deleteDir()
+        deleteDir("Cleaning up the workspace")
 
-        checkout scm
+        checkout scm("Cloning the repo`")
 
         docker.image('ruby:2.4.1').inside {
 
-          stage("Install Bundler") {
+          stage("Installing bundler") {
             sh "gem install bundler --no-rdoc --no-ri"
           }
 
-          stage("Use Bundler to install dependencies") {
+          stage("Installing dependencies") {
             sh "bundle install"
           }
 
-          stage("Build package") {
+          stage("Building the site") {
             sh "jekyll build"
           }
 
