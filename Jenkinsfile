@@ -1,29 +1,42 @@
+stage ('Stage 1. Allocate workspace')
+def extWorkspace = exwsAllocate 'diskpool1'
+
 node {
-    stage('Build') {
+    exws (extWorkspace) {
+        stage('Stage 2. Build the site') {
 
-        checkout scm
+            checkout scm
 
-        docker.image('ruby:2.4.1').inside {
+            docker.image('ruby:2.4.1').inside {
 
-          stage("Install dependencies") {
-            sh 'gem install bundler'
-            sh 'bundle install'
-          }
+              stage("Install dependencies") {
+                sh 'gem install bundler'
+                sh 'bundle install'
+              }
 
-          stage("Build the devdocs site") {
-            sh 'jekyll build'
-          }
-
-       }
-
+              stage("Build the devdocs site") {
+                sh 'jekyll build'
+              }
+           }
+        }
     }
+}
 
-    stage('Archive') {
-        archive '_site/**'
-        stash includes: '_site/**', name: 'devdocs'
-    }
+node {
+    exws (extWorkspace) {
+        stage('Stage 3. Deploy files')
 
-    stage('Deploy') {
-        //some commands
+        sh 'git config --global user.email "<email>"'
+        sh 'git config --global user.name "<username>"'
+
+        def dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+        def date = new Date()
+
+        sh('git checkout gh-pages')
+        sh('git add .')
+        sh('git commit -m "Site updated at '+dateFormat.format(date)+'"')
+
+        withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GH_TOKEN', usernameVariable: 'GH_USER')]) {
+            sh 'git push https://${GH_USER}:${GH_TOKEN}@github.com/magento/devdocs.git gh-pages'v
     }
 }
