@@ -1,5 +1,6 @@
 stage('Install dependencies') {
     node {
+        checkout scm
         withRvm('ruby-2.3.1') {
             sh 'bundle -v || gem install bundler'
             sh 'bundle install'
