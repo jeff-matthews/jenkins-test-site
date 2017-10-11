@@ -7,11 +7,11 @@ node {
 
         docker.image('ruby:2.4.1').inside {
 
-          stage("Install Bundler") {
-            sh "gem install bundler --no-rdoc --no-ri"
+          stage("Install bundler") {
+            sh "gem install bundler"
           }
 
-          stage("Use Bundler to install dependencies") {
+          stage("Install dependencies") {
             sh "bundle install"
           }
 
