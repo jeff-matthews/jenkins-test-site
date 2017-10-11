@@ -1,23 +1,26 @@
 node {
-    docker {
-        image 'ruby:2.4.1'
+    stage("Main build") {
+
+        deleteDir()
+
+        checkout scm
+
+        docker.image('ruby:2.4.1').inside {
+
+          stage("Install Bundler") {
+            sh "gem install bundler --no-rdoc --no-ri"
+          }
+
+          stage("Use Bundler to install dependencies") {
+            sh "bundle install"
+          }
+
+          stage("Build package") {
+            sh "jekyll build"
+          }
+
+       }
+
     }
-        stages {
-            stage('Check ruby') {
-                steps {
-                    sh 'ruby --version'
-                }
-            }
-            stage('Clone the repo') {
-                steps {
-                    git branch: 'master', url: 'https://github.com/jeff-matthews/jenkins-test-site.git'
-                }
-            }
-            stage('Install dependencies') {
-                steps {
-                    sh 'gem install bundler'
-                    sh 'bundle install'
-                }
-            }
-        }
+
 }
