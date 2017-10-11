@@ -3,7 +3,7 @@ node {
 
         deleteDir()
 
-        checkout scm()
+        checkout scm
 
         docker.image('ruby:2.4.1').inside {
 
