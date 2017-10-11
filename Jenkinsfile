@@ -1,16 +1,18 @@
-node('docker') {
-
-  stage 'Checkout'
-  checkout scm
-
-  def buildEnv = docker.image('ruby:latest')
-  buildEnv.pull()
-  buildEnv.inside {
-    stage 'Install dependencies'
-    sh 'gem install bundler'
-    sh 'bundle install'
-
-    stage 'Build'
-    sh 'jekyll build'
-  }
+pipeline {
+    agent {
+        docker { image 'ruby:2.4.1' }
+    }
+    stages {
+        stage('Clone the repo') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install dependencies') {
+            steps {
+                sh 'gem install bundler'
+                sh 'bundle install'
+            }
+        }
+    }
 }
