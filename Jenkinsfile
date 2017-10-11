@@ -1,12 +1,12 @@
-node {
-    agent {
+agent {
+    node {
         docker { image 'ruby:2.4.1' }
     }
     stages {
         stage('Check ruby') {
             steps {
                 sh 'ruby --version'
-            }   
+            }
         }
         stage('Clone the repo') {
             steps {
