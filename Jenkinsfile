@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 stage ('Stage 1. Allocate workspace')
 def extWorkspace = exwsAllocate 'diskpool1'
 
