@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 stage ('Stage 1. Allocate workspace')
 def extWorkspace = exwsAllocate 'diskpool1'
 
-node ('build') {
+node {
     exws (extWorkspace) {
         stage('Stage 2. Build the site') {
 
@@ -24,7 +24,7 @@ node ('build') {
     }
 }
 
-node ('build') {
+node {
     exws (extWorkspace) {
         stage('Stage 3. Deploy files')
 
