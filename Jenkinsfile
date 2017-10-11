@@ -19,7 +19,7 @@ node {
     }
 
     stage('Archive') {
-        archive '_site/**'
+        archive '_site/**/*'
         stash includes: '_site/**', name: 'devdocs'
     }
 
