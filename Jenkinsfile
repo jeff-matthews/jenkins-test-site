@@ -1,26 +1,16 @@
-node {
-    stage("Preparing the build environment") {
+node('docker') {
 
-        deleteDir()
+  stage 'Checkout'
+  checkout scm
 
-        checkout scm
+  def buildEnv = docker.image('ruby:latest')
+  buildEnv.pull()
+  buildEnv.inside {
+    stage 'Install dependencies'
+    sh 'gem install bundler'
+    sh 'bundle install'
 
-        docker.image('ruby:2.4.1').inside {
-
-          stage("Installing bundler") {
-            sh "gem install bundler --no-rdoc --no-ri"
-          }
-
-          stage("Installing dependencies") {
-            sh "bundle install"
-          }
-
-          stage("Building the site") {
-            sh "jekyll build"
-          }
-
-       }
-
-    }
-
+    stage 'Build'
+    sh 'jekyll build'
+  }
 }
