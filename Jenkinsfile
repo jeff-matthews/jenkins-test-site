@@ -1,4 +1,4 @@
-agent {
+node {
     docker {
         image 'ruby:2.4.1'
     }
