@@ -1,9 +1,9 @@
 node {
     stage("Preparing the build environment") {
 
-        deleteDir("Cleaning up the workspace")
+        deleteDir()
 
-        checkout scm("Cloning the repo`")
+        checkout scm()
 
         docker.image('ruby:2.4.1').inside {
 
